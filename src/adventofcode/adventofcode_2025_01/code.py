@@ -28,6 +28,7 @@ def solve_1(o):
 
     return ans
 
+# simply iterate the operations in the locker numbers
 def solve_2(o):
     ans = 0
     start = 50
