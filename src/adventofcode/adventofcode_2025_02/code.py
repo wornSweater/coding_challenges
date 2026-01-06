@@ -17,8 +17,8 @@ def solve_1(bounds):
     ans = 0
 
     for bound in bounds:
-        lb, up = int(bound.split("-")[0]), int(bound.split("-")[1])
-        for i in range(lb, up + 1):
+        lb, ub = int(bound.split("-")[0]), int(bound.split("-")[1])
+        for i in range(lb, ub + 1):
             if len(str(i)) % 2 == 0:
                 x, y = int(str(i)[:int(len(str(i)) / 2)]), int(str(i)[int(len(str(i)) / 2):])
                 if x == y:
@@ -31,14 +31,16 @@ def solve_1(bounds):
 def solve_2(bounds):
 
     ################################################################################################################################
-    # the bug will happen in ilne 41, if we set the chucksize too large, exceeding half (e.g half + 1), then the set len is also 1 #
+    # the bug will happen in ilne 41, if we set the chucksize too large, exceeding half (e.g half + 1), then the set len is also 1
+    # 
+    # break is really important here since it avoid the duplicate like 111111, otherwise an int may be plus multiple times         #
     ################################################################################################################################
 
     ans = 0
 
     for bound in bounds:
-        lb, up = int(bound.split("-")[0]), int(bound.split("-")[1])
-        for num in range(lb, up + 1): # here the num is an int, need to convert to str
+        lb, ub = int(bound.split("-")[0]), int(bound.split("-")[1])
+        for num in range(lb, ub + 1): # here the num is an int, need to convert to str
             for k in range(1, int(len(str(num)) / 2) + 1): # here the k is the chunck size
                 p = set()
                 for i in range(0, int(len(str(num))), k): # here, we split the whole str into pieces based on the chunck size
@@ -47,6 +49,33 @@ def solve_2(bounds):
                     ans += num
                     break
     
+    return ans
+
+def solve_2_new(bounds):
+
+    ################################################################################################################################
+    # counter-example: 30303, from right to left, by math it will understand this as 030303, or the split is [3,3,3]
+    # 
+    #       #
+    ################################################################################################################################
+    
+    ans = num
+
+    for bound in bounds:
+        lb, ub = int(bound.split("-")[0]), int(bound.split("-")[1])
+        for num in range(lb, ub + 1): # here the num is an int, need to convert to str
+            for k in range(1, int(len(str(num)) / 2) + 1): # here the k is the chunck size
+                p = set()
+                f = num
+                while f // 10 ** k != 0:
+                    p.add(f % 10 ** k)
+                    if len(p) > 1:
+                        break
+                    f = f // 10 ** k
+                p.add(f)
+                if len(p) == 1:
+                    ans += num
+                    break
     return ans
 
 if __name__ == "__main__":
